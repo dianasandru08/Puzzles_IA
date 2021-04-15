@@ -1,0 +1,117 @@
+% Saved by Prover9-Mace4 Version 0.5, December 2007.
+
+set(ignore_option_dependencies). % GUI handles dependencies
+set(arithmetic).  % For the "right neighbor" relation.
+assign(domain_size, 4).  % The five houses are {0,1,2,3,4}.
+
+
+if(Prover9). % Additional input for Prover9
+%
+% domain size 3: {a,b,c, d}.
+% See also the "function" part in the model produced by mace4
+%
+end_if.
+
+formulas(assumptions).
+
+%a and b are something different 
+ differentFrom(a,b).
+ differentFrom(a,c).
+ differentFrom(a,d).
+ differentFrom(b,c).
+ differentFrom(b,d).
+ differentFrom(c, d).
+
+ %the "differentFrom" relation is symmetrical
+ %so we won't bother to write it in both directions
+ differentFrom(x,y) ->  differentFrom(y,x).
+
+
+ earlier(a,b). %b is immediately to the right of a
+ earlier(b,c).
+ earlier(c,d).
+ -earlier(a,a).
+ -earlier(a,c).
+ -earlier(a,d).
+ -earlier(b,a).
+ -earlier(b,b).
+ -earlier(c,a).
+ -earlier(c,b).
+ -earlier(c,c).
+ -earlier(d,a).
+ -earlier(d,b).
+ -earlier(d,c).
+ -earlier(d,d).
+
+ later(b,a).
+ later(c, b).
+ later(c, a).
+ later(d, a).
+ later(d, b).
+ later(d, c).
+ -later(a, a).
+ -later(a, b).
+ -later(a,c).
+ -later(a, d).
+ -later(b, b).
+ -later(b,c).
+ -later(b,d).
+ -later(c,c).
+ -later(c, d).
+ -later(d, d).
+
+
+% Each person has at least one name, university, vocation, age
+
+    Donald(x) | Harold(x) | Larry(x) |Vincent(x).
+    Age5(x) | Age6(x) | Age7(x) | Age8(x).
+    Time8PM(x) | Time8halfPM(x) | Time9PM(x) | Time9halfPM(x). 
+
+% Each property applies to at most one person.
+
+    Donald(x) & Donald(y) -> -differentFrom(x,y).
+    Harold(x) & Harold(y) -> -differentFrom(x,y).
+    Larry(x) & Larry(y) -> -differentFrom(x,y).
+    Vincent(x) & Vincent(y) -> -differentFrom(x,y).
+
+    Age5(x) & Age5(y) -> -differentFrom(x,y).
+    Age6(x) & Age6(y) -> -differentFrom(x,y).
+    Age7(x) & Age7(y) -> -differentFrom(x,y).
+    Age8(x) & Age8(y) -> -differentFrom(x,y).
+
+    Time8PM(x) & Time8PM(y) -> -differentFrom(x,y).
+    Time8halfPM(x) & Time8halfPM(y) -> -differentFrom(x,y).
+    Time9PM(x) & Time9PM(y) -> -differentFrom(x,y).
+    Time9halfPM(x) & Time9halfPM(y) -> -differentFrom(x,y).
+
+   
+	
+	
+
+% The clues.
+	
+      
+      Donald(a).
+      Harold(b).
+      Larry(c).
+      Vincent(d).
+      
+		
+	%Age8(x) & Harold(y) -> earlier(x, y).   earlier(Age8(x), Harold(x)).   
+	%Donald(x) & Vincent(y) -> later(x, y).  later(Donald(x), Vincent(x)).
+	Age8(x) & Harold(y) -> (Time8PM(x) & Time8halfPM(y) ) | (Time8halfPM(x) & Time9PM(y)) | (Time9PM(x) & Time9halfPM(y)).
+	Donald(x) & Vincent(y) -> (Time8halfPM(x) & Time8PM(y) ) | (Time9PM(x) & Time8halfPM(y)) | (Time9PM(x) & Time8PM(y) ) | (Time9halfPM(x) & Time9PM(y)) | (Time9halfPM(x) & Time8halfPM(y)) | (Time9halfPM(x) & Time8PM(y)).
+        Donald(x) -> Age6(x).
+        Age5(x) -> Time8PM(x).
+        Time8halfPM(x) -> (Harold(x) & -Age6(x) ) | (-Harold(x) & Age6(x)).
+
+end_of_list.
+
+%formulas(goals).
+ 
+  %Age6(a) & Age7(b) & Age8(c) & Age5(d).
+  %Time8halfPM(a) & Time9halfPM(b) & Time9PM(c) & Time8PM(d).
+  %Time9PM(c).
+  %Time8PM(d).
+%end_of_list.
+

@@ -1,0 +1,88 @@
+% Saved by Prover9-Mace4 Version 0.5, December 2007.
+
+set(ignore_option_dependencies). % GUI handles dependencies
+
+
+if(Prover9). % Additional input for Prover9
+%
+% Finding models in FOL:
+%  Where is the alligator? 
+%  Who drinks beer?
+% domain size 3: {a,b,c}.
+% See also the "function" part in the model produced by mace4
+%
+end_if.
+
+formulas(assumptions).
+
+%a and b are something different 
+ differentFrom(a,b).
+ differentFrom(a,c).
+ differentFrom(b,c).
+
+ %the "differentFrom" relation is symmetrical
+ %so we won't bother to write it in both directions
+ differentFrom(x,y) ->  differentFrom(y,x).
+
+% Each person has at least one name, university, vocation, age
+
+    Peter(x) | Paul(x) | Mary(x).
+    UniversityA(x) | UniversityB(x) | UniversityC(x).
+    Lawyer(x) | Scientist(x) | Doctor(x).
+    Age23(x) | Age24(x) | Age26(x).
+
+% Each property applies to at most one person.
+
+    Peter(x) & Peter(y) -> -differentFrom(x,y).
+    Paul(x) & Paul(y) -> -differentFrom(x,y).
+    Mary(x) & Mary(y) -> -differentFrom(x,y).
+
+    UniversityA(x) & UniversityA(y) -> -differentFrom(x,y).
+    UniversityB(x) & UniversityB(y) -> -differentFrom(x,y).
+    UniversityC(x) & UniversityC(y) -> -differentFrom(x,y).
+
+    Lawyer(x) & Lawyer(y) -> -differentFrom(x,y).
+    Scientist(x) & Scientist(y) -> -differentFrom(x,y).
+    Doctor(x) & Doctor(y) -> -differentFrom(x,y).
+
+    Age23(x) & Age23(y) -> -differentFrom(x,y).
+    Age24(x) & Age24(y) -> -differentFrom(x,y).
+    Age26(x) & Age26(y) -> -differentFrom(x,y).
+	
+	
+
+% The clues.
+	
+	Peter(a).
+	Paul(b).
+	Mary(c).
+	
+		
+	Age23(x) -> -Lawyer(x) & -UniversityB(x).
+	Lawyer(x)-> -UniversityA(x) & -UniversityB(x).
+	Peter(x) -> -UniversityA(x) & Age26(x).
+    Mary(x)  -> Age24(x). 
+	Scientist(x) -> Age23(x).
+	UniversityC(x) -> Age26(x).
+	UniversityC(x) -> -Scientist(x).
+
+
+end_of_list.
+
+%formulas(goals).
+    %Peter(x) -> Age26(x).
+	%Mary(x) -> Age24(x).
+	%Paul(x) -> Age23(x).
+	%Paul(x) & Scientist(x).
+	%Peter(x) & UniversityC(x).
+	%Paul(x) & UniversityA(x).
+	%Mary(x) & UniversityB(x).
+	%Lawyer(x) & UniversityC(x).
+	%Peter(x) & UniversityC(x).
+	%Mary(x) -> Doctor(x).
+	%Doctor(c).
+	%Lawyer(a).
+	%Age23(b).
+
+%end_of_list.
+

@@ -1,0 +1,204 @@
+%
+% domain size 5: {a,b,c,d,e}.
+% See also the "function" part in the model produced by mace4
+%
+
+
+formulas(assumptions).
+
+ %a and b are something different 
+ differentFrom(a,b).
+ differentFrom(a,c).
+ differentFrom(a,d).
+ differentFrom(a,e).
+ differentFrom(b,c).
+ differentFrom(b,d).
+ differentFrom(b,e).
+ differentFrom(c,d).
+ differentFrom(c,e).
+ differentFrom(d,e).
+
+ %the "differentFrom" relation is symmetrical
+ %so we won't bother to write it in both directions
+ differentFrom(x,y) ->  differentFrom(y,x).
+
+% Define the "right neighbor" relation among a,b,c,d,e
+ rightneighbor(a,b). %b is immediately to the right of a
+ rightneighbor(b,c).
+ rightneighbor(c,d).
+ rightneighbor(d,e).
+ -rightneighbor(a,a).
+ -rightneighbor(a,c).
+ -rightneighbor(a,d).
+ -rightneighbor(a,e).
+ -rightneighbor(b,a).
+ -rightneighbor(b,b).
+ -rightneighbor(b,d).
+ -rightneighbor(b,e).
+ -rightneighbor(c,a).
+ -rightneighbor(c,b).
+ -rightneighbor(c,c).
+ -rightneighbor(c,e).
+ -rightneighbor(d,a).
+ -rightneighbor(d,b).
+ -rightneighbor(d,c).
+ -rightneighbor(d,d).
+ -rightneighbor(e,a).
+ -rightneighbor(e,b).
+ -rightneighbor(e,c).
+ -rightneighbor(e,d).
+ -rightneighbor(e,e).
+ 
+
+ % you are the neighbor of someone either if you live just to his right
+ % or he lives just to your right (i.e., you live just to his left)
+ rightneighbor(x,y) | rightneighbor(y,x) <-> neighbor(x,y).
+ 
+ %Define "somewhere right" relation among a, b, c, d, e
+ right(a, b).
+ right(a, c).
+ right(a, d).
+ right(a, e).
+ right(b, c).
+ right(b, d).
+ right(b, e).
+ right(c, d).
+ right(c, e).
+ right(d, e).
+ -right(a, a).
+ -right(b, a).
+ -right(b, b).
+ -right(c, a).
+ -right(c, b).
+ -right(c, c).
+ -right(d, a).
+ -right(d, b).
+ -right(d, c).
+ -right(d, d).
+ -right(e, a).
+ -right(e, b).
+ -right(e, c).
+ -right(e, d).
+ -right(e, e).
+ 
+
+% Each house has at least one nationality, pet, drink, color, car.
+
+    shirtBlue(x) | shirtGreen(x) | shirtWhite(x) | shirtYellow(x) | shirtRed(x).
+    Andrea(x) | Holly(x) | Julie(x) | Leslie(x) | Victoria(x).
+    Brown(x) | Davis(x) | Lopes(x) | Miller(x) | Wilson(x).
+    pastaFarfalle(x) | pastaLasagne(x) | pastaPene(x) | pastaSpagetti(x) | pastaRavioli(x).
+    wineAustralian(x) | wineArgentine(x) | wineChilean(x) | wineFrench(x) | wineItalian(x).
+	Age30(x) | Age35(x) | Age40(x) | Age45(x) | Age50(x).
+
+% Each property applies to at most one house.
+
+    shirtBlue(x) & shirtBlue(y) -> -differentFrom(x,y).
+    shirtGreen(x) & shirtGreen(y) -> -differentFrom(x,y).
+    shirtWhite(x) & shirtWhite(y) -> -differentFrom(x,y).
+    shirtYellow(x) & shirtYellow(y) -> -differentFrom(x,y).
+    shirtRed(x) & shirtRed(y) -> -differentFrom(x,y).
+	
+    Andrea(x) & Andrea(y) -> -differentFrom(x,y).
+    Holly(x) & Holly(y) -> -differentFrom(x,y).
+    Julie(x) & Julie(y) -> -differentFrom(x,y).
+    Leslie(x) & Leslie(y) -> -differentFrom(x,y).
+    Victoria(x) & Victoria(y) -> -differentFrom(x,y).
+	
+    Brown(x) & Brown(y) -> -differentFrom(x,y).
+    Davis(x) & Davis(y) -> -differentFrom(x,y).
+    Lopes(x) & Lopes(y) -> -differentFrom(x,y).
+    Miller(x) & Miller(y) -> -differentFrom(x,y).
+    Wilson(x) & Wilson(y) -> -differentFrom(x,y).
+	
+    pastaFarfalle(x) & pastaFarfalle(y) -> -differentFrom(x,y).
+    pastaLasagne(x) & pastaLasagne(y) -> -differentFrom(x,y).
+    pastaPene(x) & pastaPene(y) -> -differentFrom(x,y).
+    pastaSpagetti(x) & pastaSpagetti(y) -> -differentFrom(x,y).
+    pastaRavioli(x) & pastaRavioli(y) -> -differentFrom(x,y).
+	
+    wineAustralian(x) & wineAustralian(y) -> -differentFrom(x,y).
+    wineArgentine(x) & wineArgentine(y) -> -differentFrom(x,y).
+    wineChilean(x) & wineChilean(y) -> -differentFrom(x,y).
+    wineFrench(x) & wineFrench(y) -> -differentFrom(x,y).
+    wineItalian(x) & wineItalian(y) -> -differentFrom(x,y).
+	
+    Age30(x) & Age30(y) -> -differentFrom(x,y).
+    Age35(x) & Age35(y) -> -differentFrom(x,y).
+    Age40(x) & Age40(y) -> -differentFrom(x,y).
+    Age45(x) & Age45(y) -> -differentFrom(x,y).
+    Age50(x) & Age50(y) -> -differentFrom(x,y).
+
+% The clues.
+	
+
+	%1. The woman wearing the White shirt is next to the woman who likes Lombardian wines.
+	shirtWhite(x) & wineItalian(y) -> neighbor(x, y).
+	
+	%2. Ms Miller is somewhere between Ms Davis and Ms Brown, in that order.
+	% Davis ... Miller ... Brown
+	%   y ... x ... z
+	Miller(x) & Davis(y) & Brown(z) -> right(y, x) & right(x, z).
+	
+	%3. The youngest woman is at the third position.
+	Age30(c).
+	
+	%4. The 45 years old woman is somewhere to the right of the woman wearing the Red shirt.
+	Age45(x) & shirtRed(y) -> right(y, x).
+	
+	%5. The woman who likes Chilean wines also likes Farfalle.
+	wineChilean(x) -> pastaFarfalle(x).
+	
+	%6. At the first position is the woman that likes Argentine wines.
+	wineArgentine(a).
+	
+	%7. Andrea is exactly to the right of the 35 years old woman.
+	Andrea(x) & Age35(y) -> rightneighbor(y, x).
+	
+	%8. The woman wearing the Blue shirt is somewhere between Ms Davis and Holly, in that order.
+	shirtBlue(x) & Davis(y) & Holly(z) -> right(y, x) & right(x, z).
+	
+	%9. Victoria is next to Leslie.
+	Victoria(x) & Leslie(y) -> neighbor(x, y).
+	
+	%10. The woman wearing the Red shirt is somewhere to the left of the woman who likes Australian wines.
+	shirtRed(x) & wineAustralian(y) -> right(x, y).
+	
+	%11. Ms Wilson is next to the 30 years old woman.
+	Wilson(x) & Age30(y) -> neighbor(x, y).
+	
+	%12. Leslie is exactly to the left of the 30 years old woman.
+	Leslie(x) & Age30(y) -> rightneighbor(x, y).
+	
+	%13. Holly is somewhere to the right of the woman wearing the Red shirt.
+	Holly(x) & shirtRed(y) -> right(y, x).
+	
+	%14. Ms Brown is exactly to the left of Julie.
+	Brown(x) & Julie(y) ->  rightneighbor(x, y).
+	
+	%15. The youngest woman likes Penne.
+	Age30(x) -> pastaPene(x).
+	
+	%16. Ms Wilson is wearing the White shirt.
+	Wilson(x) -> shirtWhite(x).
+	
+	%17. The woman who likes Lasagne is somewhere between the woman who likes Italian wines and the woman who likes Spaghetti, in that order.
+	pastaLasagne(x) & wineItalian(y) & pastaSpagetti(z) -> right(y, x) & right(x, z).
+	
+	%18. At the second position is the woman wearing the Blue shirt.
+	shirtBlue(b).
+	
+	%19. The 40 years old woman likes Lasagne.
+	Age40(x) -> pastaLasagne(x).
+	
+	%20. Ms Lopes is at the fifth position.
+	Lopes(e).
+	
+	%21. The woman that likes Australian wines is somewhere between Victoria and the woman who likes wines from Bordeaux, in that order.
+	wineAustralian(x) & Victoria(y) & wineFrench(z) -> right(y, x) & right(x, z).
+	
+	%22. The woman wearing the Yellow shirt is exactly to the left of the 35 years old woman.
+	shirtYellow(x) & Age35(y) ->  rightneighbor(x, y).
+	
+
+end_of_list.

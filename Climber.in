@@ -1,0 +1,86 @@
+%
+% Finding models in FOL:
+%  Where is the alligator? 
+%  Who drinks beer?
+%
+
+%
+% domain size 5: {a, b, c, d}.
+% See also the "function" part in the model produced by mace4
+%
+
+
+formulas(assumptions).
+
+ %persons are something different 
+ differentFrom(a,b).
+ differentFrom(a,c).
+ differentFrom(a,d).
+ differentFrom(b,c).
+ differentFrom(b,d).
+ differentFrom(c,d).
+
+
+ %the "differentFrom" relation is symmetrical
+ %so we won't bother to write it in both directions
+ differentFrom(x,y) ->  differentFrom(y,x).
+ 
+
+% Each house has at least one soup, meat, desert.
+
+    Acongua(x) | Everest(x) | Kilimanjaro(x) | Vinson(x). 
+    Edmund(x)  | Ludwig(x)  | Nicholas(x)    | Otto(x).
+	year1970(x) | year1980(x) | year1990(x)  | year2000(x).
+	days5(x) | days10(x) | days15(x) | days20(x).
+
+% Each property applies to at most one house.
+
+    Acongua(x) & Acongua(y)   -> -differentFrom(x,y).
+    Everest(x) & Everest(y)   -> -differentFrom(x,y).
+    Kilimanjaro(x) & Kilimanjaro(y) -> -differentFrom(x,y).
+	Vinson(x) & Vinson(y) -> -differentFrom(x,y).
+
+    Edmund(x) & Edmund(y) -> -differentFrom(x,y).
+    Ludwig(x) & Ludwig(y)   -> -differentFrom(x,y).
+    Nicholas(x) & Nicholas(y) -> -differentFrom(x,y).
+	Otto(x) & Otto(y)         -> -differentFrom(x,y).
+	
+	year1970(x) & year1970(y) -> -differentFrom(x,y).
+    year1980(x) & year1980(y) -> -differentFrom(x,y).
+    year1990(x) & year1990(y) -> -differentFrom(x,y).
+	year2000(x) & year2000(y) -> -differentFrom(x,y).
+	
+	days5(x) & days5(y) -> -differentFrom(x,y).
+    days10(x) & days10(y) -> -differentFrom(x,y).
+    days15(x) & days15(y) -> -differentFrom(x,y).
+	days20(x) & days20(y) -> -differentFrom(x,y).
+	
+
+%Clues
+	Acongua(a).
+	Everest(b).
+	Kilimanjaro(c).
+	Vinson(d).
+
+	%1.
+	days10(x) -> (Everest(x) & -year1970(x)) | (-Everest(x) & year1970(x)).
+	
+	%2.
+	year1970(x) & year1990(y) -> (days20(x) & days15(y)) | (days20(x) & days10(y)) | (days20(x) & days5(y))  | (days15(x) & days10(y)) | (days15(x) & days5(y)) | (days10(x) & days5(y)).
+							  
+	%3.
+	Ludwig(x) & Otto(y) -> (year1990(x) & Kilimanjaro(y)) | (year1990(y) & Kilimanjaro(x)).
+	
+	%4.
+	Acongua(x) & year1970(y) -> (days10(x) & days5(y)) | (days15(x) & days10(y)) | (days20(x) & days15(y)).
+	
+	%5.
+	year1980(x) & Otto(y) -> (days10(x) & days5(y)) | (days15(x) & days10(y)) | (days20(x) & days15(y)).
+	
+	%6.
+	Everest(x) -> (Edmund(x) & -year1980(x)) | (-Edmund(x) & year1980(x)).
+
+	%7.
+	Edmund(x) & year1990(y) -> (days10(x) & days5(y)) | (days15(x) & days10(y)) | (days20(x) & days15(y)).
+
+end_of_list.

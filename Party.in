@@ -1,0 +1,23 @@
+formulas(assumptions).
+
+city(x) -> actor(x) & journalist(x) & writer(x).
+all x (actor(x) & invited(x)).
+all x (journalist(x) & invited(x)).
+exists x (writer(x) & invited(x)).
+
+%1 :  All actors and journalists invited to the party are late.
+all x ( actor(x) & journalist(x) ) & invited(x) -> late(x).
+
+%2 : There is at least a person who is on time
+exists x (- late(x)). %invited(x) & 
+
+%3 : There is at least an invited person who is neither a journalist nor anactor.
+exists x (invited(x) & -actor(x) & -journalist(x)).
+
+end_of_list.
+
+formulas(goals).
+
+exists x ( writer (x) & invited(x) & -late(x)).
+
+end_of_list.

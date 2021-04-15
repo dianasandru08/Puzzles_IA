@@ -1,0 +1,103 @@
+%
+% Finding models in FOL:
+%  Where is the alligator? 
+%  Who drinks beer?
+%
+
+%
+% domain size 5: {Alan, Cliff, Jennifer, Liz, Sarah}.
+% See also the "function" part in the model produced by mace4
+%
+
+
+formulas(assumptions).
+
+ %persons are something different 
+ differentFrom(Alan,Cliff).
+ differentFrom(Alan,Jennifer).
+ differentFrom(Alan,Liz).
+ differentFrom(Alan,Sarah).
+ differentFrom(Cliff,Jennifer).
+ differentFrom(Cliff,Liz).
+ differentFrom(Cliff,Sarah).
+ differentFrom(Jennifer,Liz).
+ differentFrom(Jennifer,Sarah).
+ differentFrom(Liz,Sarah).
+
+
+ %the "differentFrom" relation is symmetrical
+ %so we won't bother to write it in both directions
+ differentFrom(x,y) ->  differentFrom(y,x).
+ 
+
+% Each house has at least one soup, meat, desert.
+
+    lastFeather(x) | lastJamison(x) | lastCrawford(x) | lastRownalds(x) | lastNorthey(x). 
+    Cornwall(x) | Cumbria(x) | Essex(x) | Kent(x) | Yorkshire(x).
+	guitar(x) | computer(x) | bicycle(x) | paintSet(x) | pony(x).
+
+% Each property applies to at most one house.
+
+    lastFeather(x) & lastFeather(y)   -> -differentFrom(x,y).
+    lastJamison(x) & lastJamison(y)   -> -differentFrom(x,y).
+    lastCrawford(x) & lastCrawford(y) -> -differentFrom(x,y).
+	lastRownalds(x) & lastRownalds(y) -> -differentFrom(x,y).
+	lastNorthey(x) & lastNorthey(y)   -> -differentFrom(x,y).
+
+    Cornwall(x) & Cornwall(y) -> -differentFrom(x,y).
+    Cumbria(x) & Cumbria(y)   -> -differentFrom(x,y).
+    Essex(x) & Essex(y)       -> -differentFrom(x,y).
+	Kent(x) & Kent(y)         -> -differentFrom(x,y).
+	Yorkshire(x) & Yorkshire(y) -> -differentFrom(x,y).
+	
+	guitar(x) & guitar(y)     -> -differentFrom(x,y).
+    computer(x) & computer(y) -> -differentFrom(x,y).
+    bicycle(x) & bicycle(y)   -> -differentFrom(x,y).
+	paintSet(x) & paintSet(y) -> -differentFrom(x,y).
+	pony(x) & pony(y)         -> -differentFrom(x,y).
+	
+	
+
+% The clues.
+
+    %1.
+	-Kent(Cliff).
+	-Kent(Jennifer).
+	
+	%2.
+	lastCrawford(x) -> pony(x).
+	
+	%3.
+	lastRownalds(x) -> -Yorkshire(x).
+	lastRownalds(x) -> -bicycle(x).
+	
+	%4.
+	Cornwall(x) -> computer(x).
+	
+	%5.
+	computer(x) -> -lastRownalds(x).
+	
+	%6.
+	paintSet(Liz).
+	-Kent(Liz).
+	-lastJamison(Liz).
+	
+	%7.
+	Essex(x) -> guitar(x).
+	
+	%8.
+	Cumbria(Alan).
+	
+	%9.
+	-lastCrawford(Sarah).
+	
+	%10.
+	lastFeather(Jennifer).
+	
+    
+end_of_list.
+
+%formulas(goals).
+	
+
+%end_of_list.
